@@ -1,0 +1,27 @@
+body {margin: 0; padding: 15px;}
+
+/* header */
+header {
+	padding: 0 0 15px; margin: 0 0 15px;
+	border-bottom: 1px solid #ccc;
+}
+header h1 {
+	margin: 0 0 8px;
+	font-size: 24px;
+	font-family: 'Helvetica', Arial, sans-serif;
+}
+header p {
+	margin: 0;
+	font-size: 13px;
+}
+
+/* navigation */
+.container nav {
+	margin: 15px 0 0; padding: 15px 0 0;
+	border-top: 1px solid #ccc;
+	text-align: center;
+}
+
+footer {margin: 30px 0 0;}
+footer p {margin: 0 0 5px; font-size: 14px; font-weight: bold;}
+footer select {width: 100%; font-size: 14px;}

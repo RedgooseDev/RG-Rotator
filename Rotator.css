@@ -1,1 +1,21 @@
-.rg-rotator {}
+
+/* wrap */
+.rg-rotator {
+	position: relative;
+	width: auto; height: 150px;
+	-webkit-perspective: 1500px;
+}
+
+/* band */
+.rg-rotator-band {
+	position: absolute;
+	width: 100%; height: 100%;
+	-webkit-transform-style: preserve-3d;
+	-webkit-transition: -webkit-transform .5s ease-out;
+}
+
+/* panel */
+.rg-rotator-panel {
+	position: absolute;
+	left: 50%; top: 50%;
+}

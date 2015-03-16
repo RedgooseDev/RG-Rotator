@@ -2,5 +2,10 @@ RG-Rotator
 =====
 
 중간에서 축을 중심으로 회전하는 슬라이드입니다.
-javascript + jQuery + css3 3d 기능들을 활용합니다.
-...
+사용한 기술은 javascript, css3, [jQuery](http://jquery.com/), [hammer.js](http://hammerjs.github.io/) 입니다.
+
+### Browser support
+* Internet Explorer 10+
+* Safari
+* Google Chrome
+* Firefox

@@ -2,17 +2,27 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<title>RG-Rotator demo #1</title>
+<title>RG-Rotator demo #2</title>
 <meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, width=device-width">
 <link rel="stylesheet" href="../Rotator.css">
 <link rel="stylesheet" href="./demo.css">
 <style>
-#demo1 {height: 200px; background: #f1f1f1;}
+#demo1 {
+	height: 200px;
+	background: #f1f1f1;
+	-webkit-perspective: 400px;
+}
+#demo1 .band {
+	-webkit-transition: -webkit-transform .3s ease-out;
+}
 #demo1 .band div {
-	width: 100px; height: 100px;
-	margin: -50px 0 0 -50px;
+	width: 100px; height: 60px;
+	margin: -30px 0 0 -50px;
 	text-indent: -9999px; overflow: hidden;
 	opacity: .8;
+}
+#demo1.animate .band {
+	-webkit-transition: -webkit-transform .5s ease-out;
 }
 #demo1 .band div:nth-child(1) {background: red;}
 #demo1 .band div:nth-child(2) {background: orange;}
@@ -25,10 +35,10 @@
 <body>
 <main>
 	<header>
-		<h1>Rotator.js demo #1</h1>
+		<h1>Rotator.js demo #2</h1>
 		<p>
-			버튼이벤트가 일어나거나 스와이프 이벤트가 일어날때 한번씩 일정각도로 돌아갑니다.<br/>
-			스와이프 이벤트의 경우 손가락을 떼면 이벤트가 발생하는 기본적인 형태입니다.
+			손가락이 돌리는데로 돌아갑니다.<br/>
+			autoOn(), autoOff()메서드로 자동으로 돌아가는것을 켜고 끌 수 있습니다.
 		</p>
 	</header>
 
@@ -45,8 +55,7 @@
 			</div>
 		</div>
 		<nav>
-			<button type="button" id="btn-prev">prev</button>
-			<button type="button" id="btn-next">next</button>
+			<button type="button" id="btn-auto">autoplay</button>
 		</nav>
 		<!-- // demo -->
 	</div>
@@ -66,19 +75,22 @@
 <script>
 function log(o) {console.log(o);}
 ;(function($){
-	var demo1 = new Rotator($('#demo1'), {
-		touchType : 'basic'
-		,frontal : false
-		,panel_interval : 110
-		,bandCssTransform : { rotateX : { value: -8 } }
+	var demo2 = new Rotator($('#demo1'), {
+		touchType : 'panning'
+		,frontal : true
+		,panel_interval : 100
+		,bandCssTransform : { rotateX : { value: -10 }, rotateZ : { value: 3 } }
 	});
 
-	$('#btn-prev').on('click', function(){
-		demo1.prev();
-	});
-
-	$('#btn-next').on('click', function(){
-		demo1.next();
+	$('#btn-auto').on('click', function(){
+		if (demo2.timer)
+		{
+			demo2.autoOff();
+		}
+		else
+		{
+			demo2.autoOn();
+		}
 	});
 })(jQuery);
 </script>
