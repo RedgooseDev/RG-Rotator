@@ -4,18 +4,29 @@
 	position: relative;
 	width: auto; height: 150px;
 	-webkit-perspective: 1500px;
+	-moz-perspective: 1500px;
+	-ms-perspective: 1500px;
+	perspective: 1500px;
 }
 
 /* band */
 .rg-rotator-band {
 	position: absolute;
-	width: 100%; height: 100%;
+	width: 100%;
+	height: 100%;
 	-webkit-transform-style: preserve-3d;
+	-moz-transform-style: preserve-3d;
+	-ms-transform-style: preserve-3d;
+	transform-style: preserve-3d;
 	-webkit-transition: -webkit-transform .5s ease-out;
+	-moz-transition: -moz-transform .5s ease-out;
+	-ms-transition: -ms-transform .5s ease-out;
+	transition: transform .5s ease-out;
 }
 
 /* panel */
 .rg-rotator-panel {
 	position: absolute;
-	left: 50%; top: 50%;
+	left: 50%;
+	top: 50%;
 }

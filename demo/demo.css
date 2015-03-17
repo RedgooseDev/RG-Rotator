@@ -1,4 +1,7 @@
-body {margin: 0; padding: 15px;}
+body {
+	margin: 0; padding: 15px;
+	-webkit-text-size-adjust:none;
+}
 
 /* header */
 header {

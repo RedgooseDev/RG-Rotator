@@ -17,39 +17,51 @@ function Rotator($el, options)
 {
 	// init private variables
 	var self = this;
+	var windowEvent = null;
+	var transform = null;
 
 	// init public variables
+	this.id = '_' + Math.random().toString(36).substr(2, 10);
 	this.set = $.extend({}, this.defaults, options);
 	this.$self = $el;
 	this.$band = this.$self.find(this.set.selector_band);
-	this.$figure = this.$self.find(this.set.selector_panel);
-	this.count = this.$figure.length;
+	this.$panel = this.$self.find(this.set.selector_panel);
+	this.count = this.$panel.length;
 	this.theta = 0;
 	this.hammer = new Hammer(this.$self.get(0), {});
 	this.cos = 360 / this.count;
 	this.timer = null;
 
+	windowEvent = 'focus.' + this.id + ' blur.' + this.id;
+
 
 	/**
-	 * Initialization CSS
-	 * css 초기화
+	 * Initialization
 	 *
 	 * @Return void
 	 */
-	var initCss = function()
+	var init = function()
 	{
+		// set class
 		self.$self.addClass('rg-rotator');
 		self.$band.addClass('rg-rotator-band');
-		self.$figure.addClass('rg-rotator-panel');
+		self.$panel.addClass('rg-rotator-panel');
 
+		// set band css transform
 		if (self.set.bandCssTransform)
 		{
-			self.$band.css('transform', getTransformValue(self.set.bandCssTransform));
+			// set rotateY
+			if (!self.set.bandCssTransform.rotateY)
+			{
+				self.set.bandCssTransform.rotateY = { value: 0 };
+			}
+			self.$band.css(transform, getTransformValue(self.set.bandCssTransform));
 		}
 
+		// set panel css transform
 		for (var i=0; i<self.count; i++)
 		{
-			self.$figure.eq(i).css('transform', getTransformValue({
+			self.$panel.eq(i).css(transform, getTransformValue({
 				rotateY : { value : self.cos * i }
 				,translateZ : { value : self.set.panel_interval }
 			}));
@@ -102,7 +114,7 @@ function Rotator($el, options)
 						start = self.theta;
 						self.$self.addClass('animate');
 						end = self.theta - (e.velocityX * 100);
-						end = self.cos * Math.ceil(end / self.cos);
+						end = self.cos * Math.round(end / self.cos);
 						dis = start - end;
 						if (self.set.auto)
 						{
@@ -199,6 +211,29 @@ function Rotator($el, options)
 		return str;
 	}
 
+	/**
+	 * Get prefix
+	 * 브라우저 prefix를 가져온다.
+	 *
+	 * @Param {String} attr : css attribute
+	 * @Return {String}
+	 */
+	var getPrefix = function(attr)
+	{
+		var el = document.createElement("div");
+		var prefixes = ["Webkit", "Moz", "O", "ms"];
+		var cssAttr = attr.charAt(0).toUpperCase() + attr.slice(1);
+		for ( var i=0; i<prefixes.length; i++ )
+		{
+			if (prefixes[i] + cssAttr in el.style)
+			{
+				return '-' + prefixes[i].toLowerCase() + '-' + attr;
+			}
+		}
+		return cssAttr in el.style ? attr : null;
+	}
+
+
 
 	/***********************************
 	 * PUBLIC FUNCTION
@@ -231,7 +266,7 @@ function Rotator($el, options)
 	{
 		// change band css
 		self.set.bandCssTransform.rotateY = { value: n };
-		this.$band.css('transform', getTransformValue(self.set.bandCssTransform));
+		this.$band.css(transform, getTransformValue(self.set.bandCssTransform));
 	}
 
 	/**
@@ -262,17 +297,16 @@ function Rotator($el, options)
 	 * On auto rotate
 	 * 자동으로 band를 돌린다.
 	 *
-	 * @Param {Boolean} dir : 돌아가는 방향 (true:왼쪽, false:오른쪽)
 	 * @Return void
 	 */
-	this.autoOn = function(dir)
+	this.autoOn = function()
 	{
+		//log(self.set.autoDirection);
 		this.$self.addClass('auto');
-
 		if (!self.timer)
 		{
 			self.timer = setInterval(function(){
-				self.setRotate( (dir) ? self.set.autoSpeed : 0 - self.set.autoSpeed );
+				self.setRotate( (self.set.autoDirection == 'left') ? self.set.autoSpeed : 0 - self.set.autoSpeed );
 				self.rotateAct(self.theta);
 			}, 200);
 		}
@@ -284,21 +318,70 @@ function Rotator($el, options)
 	 *
 	 * @Return void
 	 */
-	// auto off
 	this.autoOff = function()
 	{
 		clearInterval(self.timer);
 		self.timer = null;
 	}
 
+	/**
+	 * Auto start
+	 *
+	 * @Param {Boolean} dir : 방향
+	 * @Param {Number} speed : 애니메이션 속도
+	 * @Return void
+	 */
+	this.autoStart = function(dir, speed)
+	{
+		this.set.auto = true;
+		this.set.autoSpeed = (speed) ? speed : this.set.autoSpeed;
+		this.set.autoDirection = (dir) ? dir : this.set.autoDirection;
+
+		this.autoOn();
+
+		$(window).on(windowEvent, function(e){
+			switch(e.type)
+			{
+				case 'blur':
+					self.autoOff();
+					break;
+				case 'focus':
+					self.autoOn();
+					break;
+			}
+		});
+	}
+
+	/**
+	 * Auto end
+	 *
+	 * @Return void
+	 */
+	this.autoEnd = function()
+	{
+		this.set.auto = false;
+		this.autoOff();
+		$(window).off(windowEvent);
+	}
 
 	/***********************************
 	 * ACTION
 	 **********************************/
 
-	touchEvent(this.set.touchType);
-	initCss();
+	// set transform
+	transform = getPrefix('transform');
+	if (!transform)
+	{
+		return false;
+	}
 
+	// init
+	init();
+
+	// init touchevent
+	touchEvent(this.set.touchType);
+
+	// turn on auto
 	if (self.set.auto)
 	{
 		this.autoOn();
@@ -311,8 +394,9 @@ function Rotator($el, options)
 Rotator.prototype.defaults = {
 	touchType : 'basic'
 	,bandCssTransform : {}
-	,autoSpeed : 10
 	,auto : false
+	,autoSpeed : 10
+	,autoDirection : 'right'
 	,selector_band : '.band'
 	,selector_panel : '.band > div'
 }
