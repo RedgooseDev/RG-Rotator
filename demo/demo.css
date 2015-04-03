@@ -20,6 +20,7 @@ header p {
 
 /* navigation */
 .container nav {
+	position: relative; z-index: 9999;
 	margin: 15px 0 0; padding: 15px 0 0;
 	border-top: 1px solid #ccc;
 	text-align: center;
