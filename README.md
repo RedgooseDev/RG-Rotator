@@ -6,8 +6,8 @@ RG-Rotator
 
 
 ## Demo
-http://lab.redgoose.me/RG-Rotator/demo/demo1_basic.html
-http://lab.redgoose.me/RG-Rotator/demo/demo2_free.html
+http://lab.redgoose.me/RG-Rotator/demo/demo1_basic.html  
+http://lab.redgoose.me/RG-Rotator/demo/demo2_free.html  
 http://lab.redgoose.me/RG-Rotator/demo/demo3_circle.html
 
 
