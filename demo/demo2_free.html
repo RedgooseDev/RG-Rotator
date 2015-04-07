@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <title>RG-Rotator demo #2</title>
 <meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, width=device-width">
-<link rel="stylesheet" href="../src/Rotator.css">
+<link rel="stylesheet" href="../src/RG-Rotator.css">
 <link rel="stylesheet" href="./demo.css">
 <style>
 #demo2 {
@@ -35,7 +35,7 @@
 <body>
 <main>
 	<header>
-		<h1>Rotator.js demo #2</h1>
+		<h1>demo #2 [Free]</h1>
 		<p>
 			손가락이 돌리는데로 돌아갑니다.<br/>
 			autoOn(), autoOff()메서드로 자동으로 돌아가는것을 켜고 끌 수 있습니다.
@@ -55,25 +55,25 @@
 			</div>
 		</div>
 		<nav>
-			<button type="button" id="btn-auto">autoplay</button>
+			<button type="button" id="btn-auto">toggle autoplay</button>
 		</nav>
 		<!-- // demo -->
 	</div>
 
 	<footer>
-		<p>다른 데모들</p>
+		<label for="gotodemo">다른 데모들</label>
 		<select name="gotodemo" id="gotodemo"></select>
 	</footer>
 </main>
 
-<script src="../vendor/jquery-2.1.3.min.js"></script>
-<script src="../vendor/hammer.min.js"></script>
-<script src="../src/Rotator.js"></script>
+<script src="../src/vendor/jquery-2.1.3.min.js"></script>
+<script src="../src/vendor/hammer.min.js"></script>
+<script src="../src/RG-Rotator.js"></script>
 <script src="./demo.js"></script>
 <script>
 function log(o) {console.log(o);}
 ;(function($){
-	var demo2 = new Rotator($('#demo2'), {
+	var demo2 = new RGRotator($('#demo2'), {
 		touchType : 'panning'
 		,frontal : true
 		,panel_interval : 100

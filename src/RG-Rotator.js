@@ -13,7 +13,7 @@ Object.size = function(obj) {
  * @Param {Object} options
  * @Return void
  */
-function Rotator($el, options)
+function RGRotator($el, options)
 {
 	// init private variables
 	var self = this;
@@ -61,12 +61,15 @@ function Rotator($el, options)
 		// set panel css transform
 		for (var i=0; i<self.count; i++)
 		{
-			self.$panel.eq(i).css(transform, getTransformValue({
-				rotateY : { value : self.cos * i }
-				,translateZ : { value : self.set.panel_interval }
-			}));
+			self.$panel.eq(i).css(transform, getTransformValue(
+				self.set.panelCssTransform,
+				{
+					rotateY : { value : self.cos * i }
+					,translateZ : { value : self.set.panel_interval }
+				}
+			));
 		}
-	}
+	};
 
 	/**
 	 * Touch event
@@ -91,8 +94,9 @@ function Rotator($el, options)
 
 				self.hammer.on('panstart panmove panend pancancel', function(e){
 
-					var dis = start = end = 0;
-					var transitionEnd = null;
+					var dis = 0;
+					var start = 0;
+					var end = 0;
 
 					// touch start
 					if (e.type == 'panstart')
@@ -123,7 +127,7 @@ function Rotator($el, options)
 					}
 					else
 					{
-						dis = e.velocityX * 6;
+						dis = e.velocityX * self.set.panningSpeed;
 					}
 
 					// act
@@ -155,61 +159,57 @@ function Rotator($el, options)
 
 				break;
 		}
-	}
+	};
 
 	/**
 	 * Get transform value
 	 * Array데이터를 transform 값으로 변환시켜서 반환한다.
 	 *
-	 * @Param {Array} data : 재료가 되는 타입과 값
+	 * @Param {Object} data : 재료가 되는 타입과 값
+	 * @Param {Object} data2 : data와 동일한 값이지만 data2값이 data값을 덮어씌운다.
 	 * @Return {String} : 'rotateX(30deg) translateX(20px)' 형식으로 출력한다.
 	 */
-	var getTransformValue = function(data)
+	var getTransformValue = function (data, data2)
 	{
 		// check data
 		if (!data) return false;
-		if (!Object.size(data)) return false;
+
+		// extend data
+		if (data2) {
+			data = $.extend({}, data, data2);
+		}
 
 		// 속성이름을 근거로 단위를 반환한다.
-		function getUnit(type)
-		{
-			if (/^rotate/.test(type) || /^skew/.test(type))
-			{
+		function getUnit(type) {
+			if (/^rotate/.test(type) || /^skew/.test(type)) {
 				return 'deg';
 			}
-			else if (/^translate/.test(type))
-			{
+			else if (/^translate/.test(type)) {
 				return 'px';
 			}
-			else
-			{
+			else {
 				return '';
 			}
 		}
 
 		var str = '';
 
-		for (var i in data)
-		{
-			if (i)
-			{
-				if (typeof data[i].value === 'number')
-				{
-					data[i].value = data[i].value;
-					data[i].unit = (data[i].unit) ? data[i].unit : getUnit(i);
+		for (var key in data) {
+			if (key) {
+				if (typeof data[key].value === 'number') {
+					data[key].unit = (data[key].unit) ? data[key].unit : getUnit(key);
 				}
-				else
-				{
-					data[i].value = data[i].value.toString();
-					data[i].unit = '';
+				else {
+					data[key].value = data[key].value.toString();
+					data[key].unit = '';
 				}
-				str += (i == 0) ? '' : ' ';
-				str += i + '(' + data[i].value + data[i].unit + ')';
+				str += (key == 0) ? '' : ' ';
+				str += key + '(' + data[key].value + data[key].unit + ')';
 			}
 		}
 
 		return str;
-	}
+	};
 
 	/**
 	 * Get prefix
@@ -231,7 +231,7 @@ function Rotator($el, options)
 			}
 		}
 		return cssAttr in el.style ? attr : null;
-	}
+	};
 
 
 
@@ -248,12 +248,8 @@ function Rotator($el, options)
 	 */
 	this.setRotate = function(n)
 	{
-		var start = this.theta;
-		var end = this.theta - n;
-		var distance = start - end;
-
-		this.theta = end;
-	}
+		this.theta = this.theta - n;
+	};
 
 	/**
 	 * Rotate action
@@ -267,7 +263,7 @@ function Rotator($el, options)
 		// change band css
 		self.set.bandCssTransform.rotateY = { value: n };
 		this.$band.css(transform, getTransformValue(self.set.bandCssTransform));
-	}
+	};
 
 	/**
 	 * Prev action
@@ -279,7 +275,7 @@ function Rotator($el, options)
 	{
 		this.setRotate(this.cos);
 		this.rotateAct(this.theta);
-	}
+	};
 
 	/**
 	 * Next action
@@ -291,7 +287,7 @@ function Rotator($el, options)
 	{
 		this.setRotate(0 - this.cos);
 		this.rotateAct(this.theta);
-	}
+	};
 
 	/**
 	 * On auto rotate
@@ -310,7 +306,7 @@ function Rotator($el, options)
 				self.rotateAct(self.theta);
 			}, 200);
 		}
-	}
+	};
 
 	/**
 	 * Off auto rotate
@@ -322,7 +318,7 @@ function Rotator($el, options)
 	{
 		clearInterval(self.timer);
 		self.timer = null;
-	}
+	};
 
 	/**
 	 * Auto start
@@ -350,7 +346,7 @@ function Rotator($el, options)
 					break;
 			}
 		});
-	}
+	};
 
 	/**
 	 * Auto end
@@ -362,7 +358,7 @@ function Rotator($el, options)
 		this.set.auto = false;
 		this.autoOff();
 		$(window).off(windowEvent);
-	}
+	};
 
 	/***********************************
 	 * ACTION
@@ -370,33 +366,41 @@ function Rotator($el, options)
 
 	// set transform
 	transform = getPrefix('transform');
-	if (!transform)
+	if (transform)
 	{
-		return false;
-	}
+		// init
+		init();
 
-	// init
-	init();
+		// init touchevent
+		touchEvent(this.set.touchType);
 
-	// init touchevent
-	touchEvent(this.set.touchType);
-
-	// turn on auto
-	if (self.set.auto)
-	{
-		this.autoOn();
+		// turn on auto
+		if (self.set.auto)
+		{
+			this.autoOn();
+		}
 	}
 
 }
 
 
+// set jQuery plugin
+(function($) {
+	return $.fn.rgRotator = function(options) {
+		return new RGRotator($(this), options).run(true);
+	};
+})(jQuery);
+
+
 // set default option
-Rotator.prototype.defaults = {
+RGRotator.prototype.defaults = {
 	touchType : 'basic'
+	,panningSpeed : 20
 	,bandCssTransform : {}
+	,panelCssTransform : {}
 	,auto : false
 	,autoSpeed : 10
 	,autoDirection : 'right'
 	,selector_band : '.band'
 	,selector_panel : '.band > div'
-}
+};

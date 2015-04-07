@@ -2,8 +2,9 @@ function log(o) {console.log(o);}
 
 (function($){
    var linkList = [
-      'demo1.html',
-      'demo2.html'
+      { name: 'Basic', src: 'demo1_basic.html' }
+      ,{ name: 'Free', src: 'demo2_free.html' }
+      ,{ name: 'Circle', src: 'demo3_circle.html' }
    ];
 
    var options = '';
@@ -11,9 +12,9 @@ function log(o) {console.log(o);}
    var patt = null;
    for (var o in linkList)
    {
-      patt = new RegExp(linkList[o]);
+      patt = new RegExp(linkList[o].src);
       selected = (patt.test(window.location.href)) ? ' selected' : '';
-      options += '<option value="' + linkList[o] + '"' + selected + '>' + linkList[o] + '</option>';
+      options += '<option value="' + linkList[o].src + '"' + selected + '>' + linkList[o].name + '</option>';
    }
 
    $('#gotodemo').html(options).on('change', function(){
