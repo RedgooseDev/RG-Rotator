@@ -7,9 +7,9 @@ rg-Rotator
 
 ## Demo
 
-- http://lab.redgoose.me/rg-rotator/demo/demo1_basic.html
-- http://lab.redgoose.me/rg-rotator/demo/demo2_free.html
-- http://lab.redgoose.me/rg-rotator/demo/demo3_circle.html
+- https://lab.redgoose.me/rg-rotator/demo/demo1_basic.html
+- https://lab.redgoose.me/rg-rotator/demo/demo2_free.html
+- https://lab.redgoose.me/rg-rotator/demo/demo3_circle.html
 
 
 ## Browser support
